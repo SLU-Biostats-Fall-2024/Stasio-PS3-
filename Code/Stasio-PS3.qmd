@@ -85,6 +85,7 @@ The data is clean and there are no outliers present. Thus, nothing needs to be r
 Create an initial plot to examine the question of whether or not body mass differs between the 5 species of bats and get a rough idea. Since species is a factor variable type and mass_g is a numeric variable type, histograms are an appropriate plot choice.
 
 #### Create histograms that show body mass data by species
+
 ```{r}
 ggplot(bats, aes(mass_g)) +
   geom_histogram(bins=7) +
@@ -95,6 +96,7 @@ ggplot(bats, aes(mass_g)) +
 Examining the centers of the histograms, it seems like there will not be a statistically significant difference between the MYLU and PESU species. However, every other species appears to be statistically significant from one another. Thus we will proceed with this in mind and conduct two tests: ANOVA and Tukey's.
 
 #### View contrasts to and conduct an ANOVA test
+
 ```{r}
 #Fit the model
 model_bats_mass <- lm(mass_g ~ Species, data = bats)
@@ -106,18 +108,20 @@ summary(model_bats_mass)
 anova(model_bats_mass)
 ```
 
-The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the EPFU species due to it coming first alphabetically. The contrast for the LACI species is a positive number, indicating that, on average, it has a larger body mass than the EPGU species. The rest of the species, LANO, MYLU, and PESU, are negative numbers, which indicate that, on average, they have a smaller body mass than the EPGU species. Now, based on the ANOVA test, we can conclude that overall there is a statistically significant difference in body mass among the bat species (Degrees of freedom = 4, F-value = 792.9, P-value < 2.2e-16).
+The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the EPFU species due to it coming first alphabetically. The contrast for the LACI species is a positive number, indicating that, on average, it has a larger body mass than the EPGU species. The rest of the species, LANO, MYLU, and PESU, are negative numbers, which indicate that, on average, they have a smaller body mass than the EPGU species. Now, based on the ANOVA test, we can conclude that overall there is a statistically significant difference in body mass among the bat species (Degrees of freedom = 4, F-value = 792.9, P-value \< 2.2e-16).
 
 #### Conduct a Tukey's HSD Test
+
 ```{r}
 #Conduct test
 phc1 <- glht(model_bats_mass, linfct = mcp(Species = "Tukey"))
 summary(phc1)
 ```
 
-Based on the contrasts given in this Tukey's test, every bat species significantly differs from one another. All the contrasts are large values while all the associated p-values are small. Notably, the PESU and MYLU species vary the least from one another as they have the smallest contrast, which aligns with what was determined by examining the histograms. 
+Based on the contrasts given in this Tukey's test, every bat species significantly differs from one another. All the contrasts are large values while all the associated p-values are small. Notably, the PESU and MYLU species vary the least from one another as they have the smallest contrast, which aligns with what was determined by examining the histograms.
 
 #### Construct a clean scatterplot to convey the results
+
 ```{r}
 # Calculate the means to display on the scatterplot
 means1 <- bats |>
@@ -136,13 +140,14 @@ ggplot(bats, aes(x=mass_g, y=Species,color=Species)) +
   theme_bw()
 ```
 
-Statement: The species of bat serves as a significant predictor of its body mass (Degrees of freedom = 4, F-value = 792.9, P-value < 2.2e-16).
+Statement: The species of bat serves as a significant predictor of its body mass (Degrees of freedom = 4, F-value = 792.9, P-value \< 2.2e-16).
 
 ## Question 2
 
 Create an intial plot to examine the question of whether or not body length differs between the 5 species and get a rough idea. Since species is a factor variable type and body length is an integer variable type, we can take a similar approach to the previous question by constructing histograms.
 
 #### Create histograms that show body length data by species
+
 ```{r}
 ggplot(bats, aes(x=body_length_mm)) +
   geom_histogram(bins=20) +
@@ -153,6 +158,7 @@ ggplot(bats, aes(x=body_length_mm)) +
 Examining the centers of the histograms, there does appear to be a statistical difference among the bat species. While the centers seem distinct from one another, the LANO, MYLU, and PESU species are notably closer to one another compared to the EPFU and LACI species. Similar to the previous question, we can further examine these results by running ANOVA and Tukey's tests.
 
 #### View contrasts and conduct an ANOVA test
+
 ```{r}
 #Fit the model
 model_bats_length <- lm(body_length_mm ~ Species, data = bats)
@@ -164,9 +170,10 @@ summary(model_bats_length)
 anova(model_bats_length)
 ```
 
-The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the EPFU species due to it coming first alphabetically.The contrast for the LACI species is a positive number, indicating that, on average, it has a larger body length than the EPGU species. The rest of the species, LANO, MYLU, and PESU, are negative numbers, which indicate that, on average, they have a smaller body length than the EPGU species. Now, based on the ANOVA test, we can conclude that overall there is a statistically significant difference in body length among the bat species (Degrees of freedom = 4, F-value = 70.498, P-value < 2.2e-16).
+The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the EPFU species due to it coming first alphabetically.The contrast for the LACI species is a positive number, indicating that, on average, it has a larger body length than the EPGU species. The rest of the species, LANO, MYLU, and PESU, are negative numbers, which indicate that, on average, they have a smaller body length than the EPGU species. Now, based on the ANOVA test, we can conclude that overall there is a statistically significant difference in body length among the bat species (Degrees of freedom = 4, F-value = 70.498, P-value \< 2.2e-16).
 
 #### Conduct a Tukey's HSD Test
+
 ```{r}
 #Conduct test
 phc2 <- glht(model_bats_length, linfct = mcp(Species = "Tukey"))
@@ -176,6 +183,7 @@ summary(phc2)
 Based on the contrasts given in this Tukey's test, every bat species significantly differs from one another, except for the PESU-MYLU comparison. All the contrasts are large values while all the associated p-values are small, except for the PESU-MYLU comparison, which has a p-value of 0.2622. Besides the PESU-MYLU comparison, the LANO-EPFU and MYLU-LANO comparisons are the closest to one another, with p-values less than 0.05 (indicating they are still significantly different from each other) but greater than 0.001. The rest of the comparisons all returned p-values less than 0.001. Based on the histogram, the PESU-MYLU and MYLU-LANO comparisons being more similar than the others was expected, but the LANO-EPFU was discovered to be similar through this test.
 
 #### Construct a clean scatterplot to convey the results
+
 ```{r}
 # Calculate the means to display on the scatterplot
 means2 <- bats |>
@@ -194,11 +202,11 @@ ggplot(bats, aes(x=body_length_mm, y=Species,color=Species)) +
   theme_bw()
 ```
 
-Statement: The species of bat serves as a significant predictor of its body length (Degrees of freedom = 4, F-value = 70.498, P-value < 2.2e-16).
+Statement: The species of bat serves as a significant predictor of its body length (Degrees of freedom = 4, F-value = 70.498, P-value \< 2.2e-16).
 
 ## Question 3
 
-Create initial plots to answer the question of whether the number of ticks found on the bats is associated with their sex or age. Since sex and age are categorical predictor variables and tick_num is an integer response variable, we can get a rough idea of the relationships by constructing box-and-whisker plots. 
+Create initial plots to answer the question of whether the number of ticks found on the bats is associated with their sex or age. Since sex and age are categorical predictor variables and tick_num is an integer response variable, we can get a rough idea of the relationships by constructing box-and-whisker plots.
 
 ```{r}
 #Box-and-whisker plot for age association with number of ticks
@@ -213,9 +221,10 @@ ggplot(bats, aes(x=sex, y=tick_num)) +
   theme_bw()
 ```
 
-Based on the box-and-whisker plot for the association between age and number of ticks found on the bats, age does not seem to be a statistically significant predictor since the centers of the boxes (and the black lines indicating the medians) are relatively close to one another. However, based on the box-and-whisker plot for the association between sex and number of ticks found on the bats, sex does seem to be a statistically significant predictor since the centers of the boxes (and the black lines) are far apart from each other. To further examine these results, we can run an ANOVA test on each predictor and then examine both simultaneously with a chi-square goodness of fit test.  
+Based on the box-and-whisker plot for the association between age and number of ticks found on the bats, age does not seem to be a statistically significant predictor since the centers of the boxes (and the black lines indicating the medians) are relatively close to one another. However, based on the box-and-whisker plot for the association between sex and number of ticks found on the bats, sex does seem to be a statistically significant predictor since the centers of the boxes (and the black lines) are far apart from each other. To further examine these results, we can run an ANOVA test on each predictor and then examine both simultaneously with a chi-square goodness of fit test.
 
 #### View contrasts and conduct an ANOVA test
+
 ```{r}
 #Fit the model for age association
 model_bats_age <- lm(tick_num ~ age, data = bats)
@@ -240,9 +249,10 @@ summary(model_bats_sex)
 anova(model_bats_sex)
 ```
 
-The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the female sex due to it coming first alphabetically. Examining the male contrast, it is a positive number, indicating that, on average, the male sex contracts more ticks than the female sex. Based on the ANOVA test, there is a statistically significant association between the sex of the bats investigated and the number of ticks they contracted (Degrees of freedom = 1, F-value = 113.71, P-value < 2.2e-16).
+The autoplot graphs are as expected, so the information from the subsequent tests is valid. For the contrasts, the intercept was chosen to be the female sex due to it coming first alphabetically. Examining the male contrast, it is a positive number, indicating that, on average, the male sex contracts more ticks than the female sex. Based on the ANOVA test, there is a statistically significant association between the sex of the bats investigated and the number of ticks they contracted (Degrees of freedom = 1, F-value = 113.71, P-value \< 2.2e-16).
 
 #### Conduct a Chi-square goodness of fit test
+
 ```{r}
 #Transform the data frame into a matrix
 bats.mat <- xtabs(tick_num ~ age + sex, data = bats)
@@ -253,9 +263,10 @@ bats.chi <- chisq.test(bats.mat)
 names(bats.chi)
 ```
 
-When examining age and sex simultaneously, the results of this Chi-square indicate we can not use the combination as a significant predictor of the number ticks found on the bats in the sample. The p-value (0.5615) is far too large. 
+When examining age and sex simultaneously, the results of this Chi-square indicate we can not use the combination as a significant predictor of the number ticks found on the bats in the sample. The p-value (0.5615) is far too large.
 
 #### Construct a clean bar plot to convey the results
+
 ```{r}
 #Construct bar plots that conveys sex as a significant predictor of the number of ticks found on the bats sampled, and demonstrates age is not a good predictor
 #Find the average number of ticks by sex
@@ -285,7 +296,7 @@ ggplot(avg_sex, aes(x=age, y=avg_tick2, fill=age)) +
   ylab("Average Number of Ticks")
 ```
 
-Statement: The sex of the bats serves as a significant predictor of the number of ticks they will contract, with males contracting more ticks than females (Degrees of freedom = 1, F-value = 113.71, P-value < 2.2e-16). However, age is not a significant predictor (Degrees of Freedom = 1, F-value = 2.6571, p-value = 0.1056).
+Statement: The sex of the bats serves as a significant predictor of the number of ticks they will contract, with males contracting more ticks than females (Degrees of freedom = 1, F-value = 113.71, P-value \< 2.2e-16). However, age is not a significant predictor (Degrees of Freedom = 1, F-value = 2.6571, p-value = 0.1056).
 
 #### Question 4
 
@@ -297,9 +308,10 @@ ggplot(bats, aes(x=body_length_mm, y=tail_length_mm)) +
   theme_bw()
 ```
 
-By examining the scatterplot, there seems to be a positive correlation between body length and tail length. The larger the body length, the larger the tail length will be. In other words, body length is likely a statistically significant predictor of tail length, and we can examine this further by running an ANOVA test and creating a figure with a regression line. 
+By examining the scatterplot, there seems to be a positive correlation between body length and tail length. The larger the body length, the larger the tail length will be. In other words, body length is likely a statistically significant predictor of tail length, and we can examine this further by running an ANOVA test and creating a figure with a regression line.
 
 #### Conduct an ANOVA test
+
 ```{r}
 #Fit the model
 model_bats_body_tail_lengths <- lm(tail_length_mm ~ body_length_mm, data = bats)
@@ -311,9 +323,10 @@ summary(model_bats_body_tail_lengths)
 anova(model_bats_body_tail_lengths)
 ```
 
-The autoplot graphs are as expected, so the information from the subsequent tests is valid. The results of the ANOVA test indicate there is a statistically significant association between body length and tail length (Degrees of Freedom = 1, F-value = 1037.2, p-value < 2.2e-16). This positive association was as expected given the results of the scatterplot. 
+The autoplot graphs are as expected, so the information from the subsequent tests is valid. The results of the ANOVA test indicate there is a statistically significant association between body length and tail length (Degrees of Freedom = 1, F-value = 1037.2, p-value \< 2.2e-16). This positive association was as expected given the results of the scatterplot.
 
 #### Construct a clean scatterplot that includes a regression line
+
 ```{r}
 ggplot(bats, aes(x=body_length_mm, y=tail_length_mm)) +
   geom_point() +
@@ -323,4 +336,4 @@ ggplot(bats, aes(x=body_length_mm, y=tail_length_mm)) +
   theme_bw()
 ```
 
-Statement: The body lengths of the examined bats is positively correlated with their tail lengths (Degrees of Freedom = 1, F-value = 1037.2, p-value < 2.2e-16).
+Statement: The body lengths of the examined bats is positively correlated with their tail lengths (Degrees of Freedom = 1, F-value = 1037.2, p-value \< 2.2e-16).
